@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import WeatherData from "./WeatherData";
 import Desktop from "./Desktop";
 import Mobile from "./Mobile";
 import SmartWatch from "./SmartWatch";
+import WeatherData from "./WeatherData";
 import "./App.css";
 
 export default function App() {
@@ -15,8 +15,9 @@ export default function App() {
       const humidity = Math.floor(Math.random() * 100);
       weatherData.setMeasurements(temperature, humidity);
 
-      const log = `Temperature: ${temperature}°C, Humidity: ${humidity}%`;
-      setLog((prevLog) => [...prevLog, log]);
+      const now = new Date().toLocaleTimeString();
+      const newLog = `${now} - Temperature: ${temperature}°C, Humidity: ${humidity}%`;
+      setLog((prevLog) => [...prevLog, newLog].slice(-5));
     }, 2000);
 
     return () => clearInterval(interval);
@@ -24,17 +25,14 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Weather Watcher</h1>
+      <h1>Weather</h1>
       <div style={{ marginBottom: 40, height: 100 }}>
-        {log.slice(-5).map((log, index) => (
+        {log.map((entry, index) => (
           <div
             key={index}
-            style={{
-              fontWeight:
-                index === log.slice(-5).length - 1 ? "bold" : "normal",
-            }}
+            style={{ fontWeight: index === log.length - 1 ? "bold" : "normal" }}
           >
-            {log}
+            {entry}
           </div>
         ))}
       </div>
