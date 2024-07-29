@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import WeatherData from "./WeatherData";
 
 interface Props {
@@ -6,25 +6,42 @@ interface Props {
 }
 
 export default function Desktop({ weatherData }: Props) {
+  const [registered, setRegistered] = useState<boolean>(false);
   const [temperature, setTemperature] = useState<number>(0);
   const [humidity, setHumidity] = useState<number>(0);
 
-  const update = (temp: number, hum: number) => {
-    console.log(`Current conditions: ${temp}F degrees and ${hum}% humidity`);
-    setTemperature(temp);
-    setHumidity(hum);
-  };
+  const [observer] = useState({
+    update: (temp: number, hum: number) => {
+      console.log(`Desktop: ${temp}F degrees and ${hum}% humidity`);
+      setTemperature(temp);
+      setHumidity(hum);
+    },
+  });
 
-  useEffect(() => {
-    console.log("Registering observer");
-    weatherData.registerObserver({ update });
-  }, [weatherData]);
+  const onClick = () => {
+    if (!registered) {
+      console.log("Registering observer");
+      weatherData.registerObserver(observer);
+      setRegistered(true);
+    } else {
+      console.log("Unregistering observer");
+      weatherData.removeObserver(observer);
+      setRegistered(false);
+    }
+  };
 
   return (
     <fieldset>
       <legend>Desktop</legend>
-      <p>{`Temperature: ${temperature}F`}</p>
-      <p>{`Humidity: ${humidity}%`}</p>
+      <button onClick={onClick}>
+        {!registered ? "Subscribe" : "Unsubscribe"}
+      </button>
+      {registered && (
+        <>
+          <p>{`Temperature: ${temperature}F`}</p>
+          <p>{`Humidity: ${humidity}%`}</p>
+        </>
+      )}
     </fieldset>
   );
 }
