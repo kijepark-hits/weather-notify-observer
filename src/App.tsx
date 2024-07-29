@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import WeatherData from "./WeatherData";
 import Desktop from "./Desktop";
+import Mobile from "./Mobile";
+import SmartWatch from "./SmartWatch";
 import "./App.css";
 
 export default function App() {
@@ -15,7 +17,15 @@ export default function App() {
   return (
     <div className="App">
       <h1>Weather Watcher</h1>
-      <Desktop weatherData={weatherData} />
+      <div style={{ marginBottom: 20 }}>
+        <Desktop weatherData={weatherData} />
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <Mobile weatherData={weatherData} />
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <SmartWatch weatherData={weatherData} />
+      </div>
     </div>
   );
 }
